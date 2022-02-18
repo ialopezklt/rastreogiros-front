@@ -23,6 +23,8 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
+import { RegistroUsuarioModule } from './registro-usuario/registro-usuario.module';
+import { RecuperarContrasenaModule } from './recuperar-contrasena/recuperar-contrasena.module';
 
 @NgModule({
   imports: [
@@ -35,6 +37,8 @@ import { ErrorComponent } from './layouts/error/error.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
+    RegistroUsuarioModule,
+    RecuperarContrasenaModule,
   ],
   providers: [
     Title,

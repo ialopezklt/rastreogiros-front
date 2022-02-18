@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-xs-0 col-sm-1 col-md-3"></div>
+  <div class="col-xs-12 col-sm-10 col-md-6">
+    <div style="text-align: center; width: 80%">
+      <img src="../../../content/images/logo-supergiros.png" />
+      <br />
+      <h6>Rastrea tu Giro</h6>
+    </div>
+    <div style="padding-top: 2em; text-align: center">
+      <p>Por favor Digitar el número de tu PIN</p>
+    </div>
+    <div>
+      <form [formGroup]="fg_consultar_giro" class="" novalidate>
+        <div>
+          <label>PIN</label>
+          <input id="txt_pin" style="width: 100%" formControlName="txt_pin" class="form-control" type="text" placeholder="Ingrese el PIN" />
+        </div>
+        <div style="padding-top: 2em">
+          <strong>Nota:</strong>Recuerde que solo podrá consultar los pines de los giros asociados a su número de documento y consultar las
+          transacciones realizadas en los ultimos tres meses.
+        </div>
+        <div style="padding-top: 2em; text-align: center">
+          <button class="btn btn-primary">Consultar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-xs-0 col-sm-1 col-md-3"></div>
+</div>

@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-md-4" style="text-align: center"></div>
+  <div class="col-md-4" style="text-align: center">
+    <div>
+      <img src="../../content/images/logo-supergiros-400x80.png" />
+    </div>
+    <strong>Recuperaci&oacute;n de contrase&ntilde;a</strong>
+    <div style="padding-top: 1em">N&uacute;mero de identificaci&oacute;n</div>
+    <div>
+      <div class="input-group mb-10">
+        <input type="tel" class="form-control" required name="numeroIdentificacion" [(ngModel)]="usuarioId" />
+        <div class="input-group-append">
+          <button class="btn btn-primary" (click)="buscarPorUsername()" [disabled]="usuarioId === ''" type="button">
+            <fa-icon [icon]="iconFaSearch"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="cedulaBuscadaExiste">
+      Se acaba de enviar un correo electónico con un código de verificación al correo {{ email_ofuscado }} y un SMS al número celular
+      {{ celular_ofuscado }}
+    </div>
+    <ngb-alert [dismissible]="true" *ngIf="!cedulaBuscadaExiste && busquedaRealizada">
+      Parece que la identificaci&oacute;n digitada no existe.
+    </ngb-alert>
+
+    <div class="md-3" style="margin-top: 20px">
+      <label for="codigoEmail"><b>Código de Email *</b></label>
+      <div class="input-group mb-10">
+        <input
+          id="codigoEmail"
+          class="form-control"
+          name="codigoEmail"
+          [(ngModel)]="codigoEmailIngresado"
+          [type]="codigoEmailVisible ? 'text' : 'password'"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="togleCodigoEmail()" type="button">
+            <fa-icon [icon]="iconoMostadoBotonEmail"></fa-icon>
+          </button>
+        </div>
+      </div>
+      <label for="codigoSMS" style="margin-top: 2em"><b>Código de Celular *</b></label>
+      <div class="input-group mb-10">
+        <input
+          nid="codigoSMS"
+          class="form-control"
+          name="codigoSMS"
+          [type]="codigoSMSVisible ? 'text' : 'password'"
+          [(ngModel)]="codigoSMSIngresado"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="togleCodigoSMS()" type="button">
+            <fa-icon [icon]="iconoMostadoBotonSMS"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="md-3" style="margin-top: 20px; text-align: end; width: 100%">
+      <button type="button" class="btn btn-primary" [disabled]="!cedulaBuscadaExiste">Enviar</button>
+    </div>
+  </div>
+  <div class="col-md-4" style="text-align: center"></div>
+</div>

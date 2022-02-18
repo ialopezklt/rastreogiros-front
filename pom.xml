@@ -8,7 +8,7 @@
     <groupId>co.com.supergiros.rastreogiros</groupId>
     <artifactId>gw-publico-rastreo-giros</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>GW Publico Rastreo Giros</name>
     <description>Description for GWPublicoRastreoGiros</description>
 

@@ -1,0 +1,144 @@
+<div class="row" style="margin-top: 2em; align-items: center">
+  <div class="col-sm-1"></div>
+  <!-- Columna de margen izq -->
+  <div class="col-md-5 col-lg-7">
+    <!-- Columna de imagen -->
+    <img src="../../../../content/images/rastreo-giros-izq.jpg" style="max-width: 100%" />
+  </div>
+  <div class="col-md-5 col-lg-3" style="min-width: 320px">
+    <!-- Columna de datos ingreso -->
+    <form #formularioLogin="ngForm" novalidate>
+      <div
+        class="container-fluid py-3"
+        style="border-radius: 15px; background-color: #006aa5; color: white; padding: 1em 2em; min-width: 350px"
+      >
+        <div class="row mt-3">
+          <!-- Btn registrate -->
+          <div style="position: absolute; right: 20px; top: 10px">
+            <!-- button id="btnRegistro" type="button" class="btn btn-sm btn-primary" (click)="registroUsuario()">Registrate</button -->
+            <a id="btnRegistro" class="btn btn-sm btn-primary" routerLink="registro-usuario">Registrate</a>
+          </div>
+          <div class="col-sm-12 mb-2" style="border-bottom: 1px white solid">
+            <h5 style="margin-top: 10%; text-align: center">RASTREA TU GIRO</h5>
+            <h6 style="margin-top: 10%; text-align: center">Ingresa</h6>
+          </div>
+        </div>
+        <!-- ================ Numero ID ============= -->
+        <div class="row" style="padding-top: 1em" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <strong>Número de identificación*</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <input
+              id="username"
+              type="text"
+              name="username"
+              [(ngModel)]="datosLogin.username"
+              #username="ngModel"
+              autocomplete="off"
+              (focus)="focusId = true; validarIngresoDatos()"
+              (blur)="focusId = false; validarIngresoDatos()"
+              (keypress)="restrictInputNumeroId($event)"
+              pattern="[0-9\-a-zA-Z]{5,}"
+              style="width: 100%"
+              class="form-control"
+              required
+            />
+          </div>
+          <div *ngIf="focusId" class="col-sm-12">
+            “Por favor ingrese su número de identificación sin puntos, ni comas”. Campo de obligatorio diligenciamiento
+          </div>
+        </div>
+        <!-- ================ Clave ============= -->
+        <div class="row" style="padding-top: 1em" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <strong>Contraseña*</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <input
+              id="password"
+              type="password"
+              pattern="[0-9\-a-zA-Z]{5,}"
+              style="width: 100%"
+              class="form-control"
+              name="password"
+              [(ngModel)]="datosLogin.password"
+              #password="ngModel"
+              autocomplete="off"
+              (blur)="validarIngresoDatos()"
+              required
+            />
+          </div>
+        </div>
+        <!-- ================ REcuperar contraseña ============= -->
+        <div class="row">
+          <div class="col-sm-12" style="text-align: center; padding-top: 1em">
+            <a href="/recuperar-contrasena" style="color: white; font-weight: 300; font-size: large">Recuperar contrase&ntilde;a</a>
+          </div>
+        </div>
+        <!-- ================ Terminos y condiciones ============= -->
+        <div class="row" style="padding-top: 1em; padding-left: 1em">
+          <div class="col-2 col-sm-2">
+            <input
+              id="cb_acepta_tyc"
+              type="checkbox"
+              class="form-check-input form-control"
+              required
+              [(ngModel)]="datosLogin.aceptaTyC"
+              name="cb_acepta_tyc"
+              #aceptaTyC="ngModel"
+            />
+          </div>
+          <div class="col-10 col-sm-10">
+            <label class="form-check-label" for="cb_acepta_tyc" style="hyphens: auto; padding: 0">
+              <span style="hyphens: auto">
+                Acepto las condiciones establecidas en la
+                <a href="https://www.supergiros.com.co/publicaciones/129465/politica-tratamientode-datos/" target="_blank">
+                  política de tratamiento de datos personales</a
+                >
+                Red Empresarial de Servicios S.A.(*)
+              </span>
+            </label>
+          </div>
+        </div>
+        <!-- ================ Captcha ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <re-captcha
+              id="recaptcha"
+              name="recaptcha"
+              #recaptcha="ngModel"
+              [(ngModel)]="token"
+              required
+              [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"
+            >
+            </re-captcha>
+            <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
+              <div *ngIf="recaptcha.errors?.['required']">Este campo es obligatorio</div>
+            </div>
+          </div>
+        </div>
+        <!-- ================ BTN Actualizar datos ============= -->
+        <div class="row" style="padding-top: 1em; text-align: center">
+          <div class="col-sm-12 mb-2">
+            <button type="button" class="btn btn-sm btn-primary" (click)="actualizarDatos()" style="width: 80%">Actualizar Datos</button>
+          </div>
+        </div>
+        <!-- ================ BTN Enviar ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <button type="button" class="btn btn-primary" (click)="send(formularioLogin)" style="width: 100%">Enviar</button>
+          </div>
+        </div>
+        <ngb-alert *ngIf="errorLogin" [dismissible]="true">
+          <strong>Valida tu usuario y contraseña</strong>
+        </ngb-alert>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-1"></div>
+</div>

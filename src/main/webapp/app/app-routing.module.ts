@@ -21,8 +21,20 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
         {
+          path: 'account',
+          loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
+        },
+        {
           path: 'login',
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
+        },
+        {
+          path: 'registro-usuario',
+          loadChildren: () => import('./registro-usuario/registro-usuario.module').then(m => m.RegistroUsuarioModule),
+        },
+        {
+          path: 'recuperar-contrasena',
+          loadChildren: () => import('./recuperar-contrasena/recuperar-contrasena.module').then(m => m.RecuperarContrasenaModule),
         },
         {
           path: '',

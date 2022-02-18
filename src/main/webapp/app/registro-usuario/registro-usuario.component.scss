@@ -1,0 +1,10 @@
+.ng-valid {
+  border: unset;
+}
+.ng-invalid {
+  border: unset;
+}
+.is-invalid > div {
+  border: unset !important;
+  border-radius: 0.2rem;
+}

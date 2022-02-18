@@ -1,0 +1,290 @@
+<div class="row" style="margin-top: 2em">
+  <div class="col-sm-3 mb-1"></div>
+  <!-- Columna de margen izq -->
+  <div class="col-sm-6" *ngIf="tipoIdentificacion">
+    <!-- Columna de datos registro -->
+    <form [formGroup]="grupoFormularioDatosRegistro" (ngSubmit)="abrirModal(content)" novalidate>
+      <div class="container-fluid py-3" style="border-radius: 15px; background-color: #006aa5; color: white; padding: 1em 2em">
+        <div class="row mt-3">
+          <div class="col-sm-12 mb-2" style="border-bottom: 1px white solid">
+            <h5 style="margin-top: 10%; text-align: center">REGISTRO</h5>
+          </div>
+        </div>
+        <!-- ================ Tipo de Documento ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-6 mb-2" style="align-self: flex-end">
+            <strong>Tipo de Documento</strong><br />
+            <select
+              id="tipoIdentificacion"
+              name="tipo_id"
+              formControlName="tipoIdentificacion"
+              style="width: 100%"
+              class="form-select form-control"
+              required
+            >
+              <option value="CC">Cédula de ciudadanía(CC)</option>
+              <option value="CE">Cédula Extranjera(CE)</option>
+              <option value="CX">Cédula Extranjería(CEX)</option>
+              <option value="TI">Tarjeta de identidad (TI)</option>
+              <option value="PA">Pasaporte</option>
+              <option value="NI">NIT</option>
+            </select>
+          </div>
+          <!-- ================ Numero ID ============= -->
+          <div class="col-sm-6 mb-2" style="align-self: flex-end">
+            <strong>Número de identificación*</strong><br />
+            <input
+              id="numeroIdentificacion"
+              formControlName="numeroIdentificacion"
+              class="form-control"
+              type="text"
+              name="name"
+              pattern="[0-9\-a-zA-Z]{5,}"
+              style="width: 100%"
+              maxlength="20"
+              required
+              autocomplete="off"
+            />
+            <div *ngIf="numeroIdentificacion?.errors && (numeroIdentificacion?.dirty || numeroIdentificacion?.touched)" class="bg-warning">
+              El número de identificación solo puede tener letas, números y el guión (-).
+            </div>
+          </div>
+        </div>
+        <!-- ================ Primer Nombre ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-6 mb-2">
+            <strong>Primer Nombre*</strong><br />
+            <input
+              id="primerNombre"
+              formControlName="primerNombre"
+              type="text"
+              autocomplete="off"
+              autocapitalize="on"
+              pattern="[0-9ñÑa-zA-Z]+"
+              class="form-control"
+              style="width: 100%"
+              required
+            />
+            <div *ngIf="primerNombre?.invalid && (primerNombre?.dirty || primerNombre?.touched)" class="bg-warning">
+              Por favor ingrese el primer nombre sin tíldes.
+            </div>
+          </div>
+          <!-- ================ Segundo Nombre ============= -->
+          <div class="col-sm-6 mb-2">
+            <strong>Segundo Nombre</strong><br />
+            <input
+              id="segundoNombre"
+              formControlName="segundoNombre"
+              type="text"
+              style="width: 100%"
+              class="form-control"
+              pattern="[0-9ñÑa-zA-Z]+"
+              autocomplete="off"
+              autocapitalize="on"
+            />
+            <div *ngIf="segundoNombre?.invalid && (segundoNombre?.dirty || segundoNombre?.touched)" class="bg-warning">
+              Por favor ingrese el segundo nombre sin tíldes.
+            </div>
+          </div>
+        </div>
+        <!-- ================ Primer Apellido ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-6 mb-2">
+            <strong>Primer Apellido*</strong><br />
+            <input
+              id="primerApellido"
+              formControlName="primerApellido"
+              type="text"
+              style="width: 100%"
+              class="form-control"
+              pattern="[0-9ñÑa-zA-Z]+"
+              required
+            />
+            <div *ngIf="primerApellido?.invalid && (primerApellido?.dirty || primerApellido?.touched)" class="bg-warning">
+              Por favor ingrese el primer apellido sin tíldes.
+            </div>
+          </div>
+          <!-- ================ Segundo Apellido ============= -->
+          <div class="col-sm-6 mb-2">
+            <strong>Segundo Apellido</strong><br />
+            <input id="segundoApellido" formControlName="segundoApellido" type="text" class="form-control" style="width: 100%" />
+            <div *ngIf="segundoApellido?.invalid && (segundoApellido?.dirty || segundoApellido?.touched)" class="bg-warning">
+              Por favor ingrese el segundo apellido sin tíldes.
+            </div>
+          </div>
+        </div>
+        <!-- ================ Contraseña ============= -->
+        <div class="row" style="padding-top: 1em" style="padding-top: 1em">
+          <div class="col-sm-6 mb-6" style="align-self: flex-end">
+            <strong>Contraseña*</strong><br />
+            <input
+              id="contrasena1"
+              formControlName="contrasena1"
+              pattern="^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;'<>,.?/_]).{8,}$"
+              class="form-control"
+              type="password"
+              style="width: 100%"
+              autocomplete="off"
+            />
+          </div>
+          <!-- ================ Confirma Contraseña ============= -->
+          <div class="col-sm-6 mb-6" style="align-self: flex-end">
+            <strong>Confirme Contraseña*</strong><br />
+            <input
+              id="contrasena2"
+              formControlName="contrasena2"
+              type="password"
+              style="width: 100%"
+              class="form-control"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+        <!-- mensajes -->
+        <div class="row" style="padding-top: 1em" style="padding-top: 1em" *ngIf="contrasena1?.invalid || contrasena2?.invalid">
+          <div *ngIf="contrasena1?.invalid && (contrasena1?.dirty || contrasena1?.touched)" class="bg-warning">
+            LA contraseña debe tener almenos una letra minúscula, una(1) letra MAYÚSCULA, un(1) número y un(1) caracter especial.
+          </div>
+          <div *ngIf="contrasena2?.invalid && (contrasena2?.dirty || contrasena2?.touched)" class="bg-warning">
+            las contraseñas deben ser iguales
+          </div>
+        </div>
+        <!-- ================ Correc Electrónico ============= -->
+        <div class="row" style="padding-top: 1em" style="padding-top: 1em">
+          <div class="col-sm-6 mb-6">
+            <strong>Correo Electrónico*</strong><br />
+            <input id="correo_electronico" formControlName="correoElectronico" type="email" class="form-control" style="width: 100%" />
+          </div>
+          <!-- ================ Celular ============= -->
+          <div class="col-sm-6 mb-6">
+            <strong>Celular*</strong><br />
+            <input
+              id="celular"
+              formControlName="celular"
+              type="tel"
+              pattern="3[0-9]{9}"
+              class="form-control"
+              jhiOnlynumberDirective
+              style="width: 100%"
+              maxlength="10"
+            />
+          </div>
+        </div>
+        <!-- ================ Terminos y condiciones ============= -->
+        <div class="row" style="padding: 1em">
+          <div class="col-1 col-sm-1">
+            <input id="cb_acepta_tyc" type="checkbox" class="form-check-input form-control" required />
+          </div>
+          <div class="col-10 col-sm-10">
+            <span style="hyphens: auto">
+              Acepto las condiciones establecidas en la
+              <a href="https://www.supergiros.com.co/publicaciones/129465/politica-tratamientode-datos/" target="_blank">
+                política de tratamiento de datos personales</a
+              >
+              Red Empresarial de Servicios S.A.(*)</span
+            >
+          </div>
+        </div>
+        <!-- ================ Captcha ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <re-captcha
+              id="recaptcha"
+              name="recaptcha"
+              formControlName="recaptcha"
+              required
+              [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"
+            >
+            </re-captcha>
+            <div *ngIf="recaptcha?.invalid && (recaptcha?.dirty || recaptcha?.touched)" class="bg-warning text-dark">
+              <div *ngIf="recaptcha?.errors?.['required']">Este campo es obligatorio.</div>
+            </div>
+          </div>
+        </div>
+        <!-- ================ BTN Enviar ============= -->
+        <div class="row" style="padding-top: 1em">
+          <div class="col-sm-12 mb-2">
+            <button type="submit" class="btn btn-primary" [disabled]="!grupoFormularioDatosRegistro.valid" style="width: 100%">
+              Enviar
+            </button>
+          </div>
+        </div>
+        <!-- ================ Seccion ERROR GENERAL ============= -->
+        <div *ngIf="errorEnRegistro" class="row alert alert-danger" style="padding-top: 1em">
+          El regisro no se pudo realizar. Por favor verifique los datos ingresados.
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-3 mb-0"></div>
+  <!-- Columna de margen derecha -->
+  <ngb-alert [dismissible]="false" *ngIf="mostrarAlertaSalir">
+    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+  </ngb-alert>
+</div>
+<!-- ================ MODAL PIDE CODIGOS ENVIADOS ============= -->
+<ng-template #content let-modal>
+  <div class="modal-header-nousada" style="text-align: center; margin: 15px">
+    <img src="../../content/images/logo-supergiros-400x80.png" width="80%" />
+    <!-- button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button -->
+  </div>
+  <div class="modal-body">
+    Para finalizar su registro por favor ingrese el codigo que se le envió al Email {{ email_ofuscado }} y el código enviado al número de
+    celular {{ celular_ofuscado }}
+    <form class="needs-validation" novalidate>
+      <div class="mb-3" style="margin-top: 20px">
+        <label for="codigoEmail"><b>Código de Email *</b></label>
+        <div class="input-group mb-10">
+          <input
+            id="codigoEmail"
+            class="form-control"
+            name="codigoEmail"
+            [(ngModel)]="codigoEmailIngresado"
+            [type]="codigoEmailVisible ? 'text' : 'password'"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" (click)="togleCodigoEmail()" type="button">
+              <fa-icon [icon]="iconoMostadoBotonEmail"></fa-icon>
+            </button>
+          </div>
+        </div>
+        <label for="codigoSMS" style="margin-top: 2em"><b>Código de Celular *</b></label>
+        <div class="input-group mb-10">
+          <input
+            nid="codigoSMS"
+            class="form-control"
+            name="codigoSMS"
+            [type]="codigoSMSVisible ? 'text' : 'password'"
+            [(ngModel)]="codigoSMSIngresado"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" (click)="togleCodigoSMS()" type="button">
+              <fa-icon [icon]="iconoMostadoBotonSMS"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div style="width: 100%">
+      <ngb-alert *ngIf="mostarAlertaIntentosExcedidos" [dismissible]="false">
+        <strong>El n&uacute;mero de Intentos se ha excedido</strong>
+      </ngb-alert>
+      <ngb-alert *ngIf="mostrarAlertaCodigosErrados" [dismissible]="false">
+        <strong>Los códigos no coinciden.</strong>
+      </ngb-alert>
+      <button
+        type="button"
+        name="btnEnviar"
+        id="btnEnviar"
+        class="btn btn-primary"
+        (click)="validarCodigoIngresados()"
+        [disabled]="clickEnviar"
+      >
+        Enviar
+      </button>
+    </div>
+    Intentos restantes: {{ intentosRestantes }}
+  </div>
+</ng-template>
