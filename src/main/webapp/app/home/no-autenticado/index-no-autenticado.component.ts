@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountService } from 'app/core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -14,7 +14,10 @@ import { Router } from '@angular/router';
   templateUrl: './index-no-autenticado.component.html',
   styleUrls: ['./index-no-autenticado.component.scss'],
 })
-export class IndexNoAutenticadoComponent {
+export class IndexNoAutenticadoComponent implements OnInit {
+  @ViewChild('username', { static: false })
+  username!: ElementRef;
+
   token: string | undefined;
   datosLogin = new FormAutenticacion('', '', '');
   submitted = false;
@@ -23,6 +26,8 @@ export class IndexNoAutenticadoComponent {
   autenticado = GlobalConstants.autenticado;
   errorLogin = false;
   formularioValido = false;
+  authenticationError = false;
+  URL_TyC = GlobalConstants.URL_TyC;
 
   constructor(
     private http: HttpClient,
@@ -33,6 +38,19 @@ export class IndexNoAutenticadoComponent {
   ) {
     this.token = undefined;
   }
+
+  ngOnInit(): void {
+    // if already authenticated then navigate to home page
+    this.accountService.identity().subscribe(() => {
+      if (this.accountService.isAuthenticated()) {
+        this.router.navigate(['']);
+      }
+    });
+  }
+
+  /*ngAfterViewInit(): void {
+    this.username.nativeElement.focus();
+  }*/
 
   public send(form: NgForm): void {
     console.log('entro');
@@ -55,19 +73,25 @@ export class IndexNoAutenticadoComponent {
   }
 
   public login(): void {
-    this.autenticarService.login(this.datosLogin.username, this.datosLogin.password).subscribe(
-      (usuario: User) => {
+    this.autenticarService.login(this.datosLogin.username, this.datosLogin.password).subscribe({
+      next: (usuario: User) => {
         console.log(usuario);
+        this.authenticationError = false;
+        if (!this.router.getCurrentNavigation()) {
+          // There were no routing during login (eg from navigationToStoredUrl)
+          this.router.navigate(['']);
+        }
         this.autenticado = true;
         GlobalConstants.autenticado = true;
-        this.router.navigateByUrl('/');
-        window.location.reload();
+        // this.router.navigateByUrl('/');
+        // window.location.reload();
       },
-      error => {
+      error: error => {
         console.log(error);
         this.errorLogin = true;
-      }
-    );
+        this.authenticationError = true;
+      },
+    });
   }
 
   public validarIngresoDatos(): void {

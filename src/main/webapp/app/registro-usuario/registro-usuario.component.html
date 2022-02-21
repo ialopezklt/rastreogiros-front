@@ -39,11 +39,12 @@
               class="form-control"
               type="text"
               name="name"
-              pattern="[0-9\-a-zA-Z]{5,}"
+              #nombre
               style="width: 100%"
               maxlength="20"
               required
               autocomplete="off"
+              oninput="this.value = this.value.toUpperCase()"
             />
             <div *ngIf="numeroIdentificacion?.errors && (numeroIdentificacion?.dirty || numeroIdentificacion?.touched)" class="bg-warning">
               El número de identificación solo puede tener letas, números y el guión (-).
@@ -60,9 +61,9 @@
               type="text"
               autocomplete="off"
               autocapitalize="on"
-              pattern="[0-9ñÑa-zA-Z]+"
               class="form-control"
               style="width: 100%"
+              oninput="this.value = this.value.toUpperCase()"
               required
             />
             <div *ngIf="primerNombre?.invalid && (primerNombre?.dirty || primerNombre?.touched)" class="bg-warning">
@@ -80,6 +81,7 @@
               class="form-control"
               pattern="[0-9ñÑa-zA-Z]+"
               autocomplete="off"
+              oninput="this.value = this.value.toUpperCase()"
               autocapitalize="on"
             />
             <div *ngIf="segundoNombre?.invalid && (segundoNombre?.dirty || segundoNombre?.touched)" class="bg-warning">
@@ -98,6 +100,7 @@
               style="width: 100%"
               class="form-control"
               pattern="[0-9ñÑa-zA-Z]+"
+              oninput="this.value = this.value.toUpperCase()"
               required
             />
             <div *ngIf="primerApellido?.invalid && (primerApellido?.dirty || primerApellido?.touched)" class="bg-warning">
@@ -107,7 +110,14 @@
           <!-- ================ Segundo Apellido ============= -->
           <div class="col-sm-6 mb-2">
             <strong>Segundo Apellido</strong><br />
-            <input id="segundoApellido" formControlName="segundoApellido" type="text" class="form-control" style="width: 100%" />
+            <input
+              id="segundoApellido"
+              formControlName="segundoApellido"
+              type="text"
+              class="form-control"
+              style="width: 100%"
+              oninput="this.value = this.value.toUpperCase()"
+            />
             <div *ngIf="segundoApellido?.invalid && (segundoApellido?.dirty || segundoApellido?.touched)" class="bg-warning">
               Por favor ingrese el segundo apellido sin tíldes.
             </div>
@@ -153,7 +163,17 @@
         <div class="row" style="padding-top: 1em" style="padding-top: 1em">
           <div class="col-sm-6 mb-6">
             <strong>Correo Electrónico*</strong><br />
-            <input id="correo_electronico" formControlName="correoElectronico" type="email" class="form-control" style="width: 100%" />
+            <input
+              id="correo_electronico"
+              formControlName="correoElectronico"
+              type="text"
+              class="form-control"
+              pattern="^(?!.*(.)\1\1).{2,}@[a-zA-Z0-9-]{2,}\.[a-zA-Z0-9-\.]+$"
+              style="width: 100%"
+            />
+            <div *ngIf="correoElectronico?.invalid && (correoElectronico?.dirty || correoElectronico?.touched)" class="bg-warning">
+              El correo no debe tener caracteres iguales consecutivos
+            </div>
           </div>
           <!-- ================ Celular ============= -->
           <div class="col-sm-6 mb-6">
@@ -164,16 +184,21 @@
               type="tel"
               pattern="3[0-9]{9}"
               class="form-control"
-              jhiOnlynumberDirective
               style="width: 100%"
+              [value]="inputCelular"
+              jhiNumberOnly
+              (keypress)="getValue($event)"
               maxlength="10"
             />
+            <div *ngIf="celular?.invalid && (celular?.dirty || celular?.touched)" class="bg-warning">
+              El número de celular debe ser válido e iniciar con 3
+            </div>
           </div>
         </div>
         <!-- ================ Terminos y condiciones ============= -->
         <div class="row" style="padding: 1em">
           <div class="col-1 col-sm-1">
-            <input id="cb_acepta_tyc" type="checkbox" class="form-check-input form-control" required />
+            <input id="cb_acepta_tyc" type="checkbox" class="form-check-input form-control" formControlName="aceptarTyC" required />
           </div>
           <div class="col-10 col-sm-10">
             <span style="hyphens: auto">
@@ -183,6 +208,9 @@
               >
               Red Empresarial de Servicios S.A.(*)</span
             >
+          </div>
+          <div *ngIf="aceptarTyC?.invalid && (aceptarTyC?.dirty || aceptarTyC?.touched)" class="bg-warning">
+            Debes aceptar los términos y condiciones para poder registrarte
           </div>
         </div>
         <!-- ================ Captcha ============= -->
@@ -204,7 +232,12 @@
         <!-- ================ BTN Enviar ============= -->
         <div class="row" style="padding-top: 1em">
           <div class="col-sm-12 mb-2">
-            <button type="submit" class="btn btn-primary" [disabled]="!grupoFormularioDatosRegistro.valid" style="width: 100%">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!grupoFormularioDatosRegistro.valid && !aceptarTyC.checked"
+              style="width: 100%"
+            >
               Enviar
             </button>
           </div>

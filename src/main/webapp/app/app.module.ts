@@ -25,6 +25,7 @@ import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
 import { RegistroUsuarioModule } from './registro-usuario/registro-usuario.module';
 import { RecuperarContrasenaModule } from './recuperar-contrasena/recuperar-contrasena.module';
+import { AllowNumberDirective } from './directives/number-only/number-only.directive';
 
 @NgModule({
   imports: [
@@ -46,7 +47,7 @@ import { RecuperarContrasenaModule } from './recuperar-contrasena/recuperar-cont
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, AllowNumberDirective],
   bootstrap: [MainComponent],
 })
 export class AppModule {

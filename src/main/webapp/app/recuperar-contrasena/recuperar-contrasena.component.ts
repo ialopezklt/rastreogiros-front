@@ -75,7 +75,8 @@ export class RecuperarContrasenaComponent implements OnInit {
     );
   }
 
-  ofuscarUsuarioYCorreo(correo: string, celular: string): void {
+  // ===========================================================================================
+  public ofuscarUsuarioYCorreo(correo: string, celular: string): void {
     let temp1 = '';
     temp1 = correo.split('@')[0].substring(0, 2);
     let temp2 = '';

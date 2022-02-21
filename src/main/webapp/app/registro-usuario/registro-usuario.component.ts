@@ -23,14 +23,6 @@ export const compararClavesValidator: ValidatorFn = (control: AbstractControl): 
   }
 };
 
-// validador para los campos nombre y apellido
-export function validarRegexValidator(nameRe: RegExp): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const forbidden = nameRe.test(control.value);
-    return forbidden ? { forbiddenName: { value: control.value } } : null;
-  };
-}
-
 @Component({
   selector: 'jhi-registro-usuario',
   templateUrl: './registro-usuario.component.html',
@@ -66,6 +58,7 @@ export class RegistroUsuarioComponent implements OnInit {
   intentosRestantes = 2;
   mostarAlertaIntentosExcedidos = false;
   mostrarAlertaCodigosErrados = false;
+  inputCelular = '3';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -82,15 +75,16 @@ export class RegistroUsuarioComponent implements OnInit {
     this.grupoFormularioDatosRegistro = this.formBuilder.group(
       {
         tipoIdentificacion: ['', [Validators.required]],
-        numeroIdentificacion: ['', [Validators.required]],
-        primerNombre: ['', [Validators.required]],
-        segundoNombre: ['', Validators.minLength(3)],
-        primerApellido: ['', [Validators.required]],
-        segundoApellido: ['', Validators.minLength(3)],
+        numeroIdentificacion: ['', [Validators.required, Validators.pattern('[A-Z0-9-]+')]],
+        primerNombre: ['', [Validators.required, Validators.pattern('(?![A-Z0-9Ñ]*?([A-Z])\\1\\1)[A-Z0-9Ñ]+')]],
+        segundoNombre: ['', Validators.pattern('(?![A-Z0-9Ñ]*?([A-Z])\\1\\1)[A-Z0-9Ñ]+')],
+        primerApellido: ['', [Validators.required, Validators.pattern('(?![A-Z0-9Ñ]*?([A-Z])\\1\\1)[A-Z0-9Ñ]+')]],
+        segundoApellido: ['', Validators.pattern('(?![A-Z0-9Ñ]*?([A-Z])\\1\\1)[A-Z0-9Ñ]+')],
         contrasena1: ['', [Validators.required, Validators.minLength(8)]],
         contrasena2: ['', [Validators.required]],
-        correoElectronico: ['', [Validators.required]],
+        correoElectronico: ['', [Validators.required, Validators.pattern('(?!.*(.)\\1\\1).{2,}@[a-zA-Z0-9-]{2,}.[a-zA-Z0-9-.]+')]],
         celular: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+        aceptarTyC: ['', Validators.required],
         recaptcha: ['', Validators.required],
       },
       { validators: compararClavesValidator }
@@ -130,11 +124,22 @@ export class RegistroUsuarioComponent implements OnInit {
   get recaptcha(): any {
     return this.grupoFormularioDatosRegistro.get('recaptcha');
   }
+  get aceptarTyC(): any {
+    return this.grupoFormularioDatosRegistro.get('aceptarTyC');
+  }
 
   ngOnInit(): void {
     //    this.datosUsuario
   }
 
+  getValue(event: KeyboardEvent): boolean {
+    // const result= (event.target as HTMLInputElement).value;
+    if (event.key.match('[0-9]')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   // ===========================================================================================
   togleCodigoEmail(): void {
     this.codigoEmailVisible = !this.codigoEmailVisible;
@@ -311,4 +316,5 @@ export class RegistroUsuarioComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+  // ===========================================================================================
 }
