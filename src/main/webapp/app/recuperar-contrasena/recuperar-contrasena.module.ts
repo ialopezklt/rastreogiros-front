@@ -7,12 +7,13 @@ import { CommonModule } from '@angular/common';
 import { RecuperarContrasenaComponent } from './recuperar-contrasena.component';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
 import { RECUPERAR_CONTRASENA_ROUTE } from './recuperar-contrasena.route';
+import { CAMBIO_CONTRASENA_ROUTE } from './cambio-contrasena/cambio-contrasena.route';
 
 @NgModule({
   declarations: [RecuperarContrasenaComponent, CambioContrasenaComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([RECUPERAR_CONTRASENA_ROUTE]),
+    RouterModule.forChild([RECUPERAR_CONTRASENA_ROUTE, CAMBIO_CONTRASENA_ROUTE]),
     FontAwesomeModule,
     NgbModule,
     FormsModule,

@@ -10,7 +10,7 @@
       <p>Por favor Digitar el número de tu PIN</p>
     </div>
     <div>
-      <form [formGroup]="fg_consultar_giro" class="" novalidate>
+      <form [formGroup]="fg_consultar_giro" class="" (ngSubmit)="consultarEnvio()">
         <div>
           <label>PIN</label>
           <input id="txt_pin" style="width: 100%" formControlName="txt_pin" class="form-control" type="text" placeholder="Ingrese el PIN" />

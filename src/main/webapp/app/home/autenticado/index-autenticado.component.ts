@@ -15,4 +15,8 @@ export class IndexAutenticadoComponent {
       txt_pin: ['', [Validators.required]],
     });
   }
+
+  consultarEnvio(): void {
+    //
+  }
 }
