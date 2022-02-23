@@ -9,7 +9,7 @@
 
       <div *ngSwitchCase="false">
         <!-- NO autenticado -->
-        <jhi-index-no-autenticado></jhi-index-no-autenticado>
+        <jhi-index-no-autenticado (autenticado)="changeAutenticado($event)"></jhi-index-no-autenticado>
       </div>
     </div>
   </div>

@@ -11,8 +11,7 @@ export class AutenticarService {
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   public login(usuario: string, clave: string): Observable<User> {
-    return this.http.get<User>(
-      this.applicationConfigService.getEndpointFor('/api/publico/login') + '?usuario=' + usuario + '&clave=' + clave
-    );
+    const postPayload = { username: usuario, password: clave };
+    return this.http.post<User>(this.applicationConfigService.getEndpointFor('/api/publico/login'), postPayload);
   }
 }

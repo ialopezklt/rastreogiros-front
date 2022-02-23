@@ -2,10 +2,10 @@
   <div class="col-md-4" style="text-align: center"></div>
   <div class="col-md-4" style="text-align: center">
     <div>
-      <img src="../../content/images/logo-supergiros-400x80.png" />
+      <img src="../../content/images/logo-supergiros-400x80.png" style="width: 80%" />
     </div>
-    <strong>Recuperaci&oacute;n de contrase&ntilde;a</strong>
-    <div style="padding-top: 1em">N&uacute;mero de identificaci&oacute;n</div>
+    <span style="font-weight: 900">Recuperaci&oacute;n de contrase&ntilde;a</span>
+    <div style="padding-top: 1em; text-align: start"><b>N&uacute;mero de identificaci&oacute;n</b></div>
     <div>
       <div class="input-group mb-10">
         <input type="tel" class="form-control" required name="numeroIdentificacion" [(ngModel)]="usuarioId" />
@@ -20,17 +20,21 @@
       Se acaba de enviar un correo electónico con un código de verificación al correo {{ email_ofuscado }} y un SMS al número celular
       {{ celular_ofuscado }}
     </div>
-    <ngb-alert [dismissible]="true" *ngIf="!cedulaBuscadaExiste && busquedaRealizada">
+    <ngb-alert *ngIf="!cedulaBuscadaExiste && busquedaRealizada" (closed)="busquedaRealizada = false">
       Parece que la identificaci&oacute;n digitada no existe.
     </ngb-alert>
 
     <div class="md-3" style="margin-top: 20px">
-      <label for="codigoEmail"><b>Código de Email *</b></label>
+      <div style="bottom: -5px; text-align: start">
+        <label for="codigoEmail"><b>Código de Email *</b></label>
+      </div>
+
       <div class="input-group mb-10">
         <input
           id="codigoEmail"
           class="form-control"
           name="codigoEmail"
+          [ngClass]="claseCodigoEmail"
           [(ngModel)]="codigoEmailIngresado"
           [type]="codigoEmailVisible ? 'text' : 'password'"
         />
@@ -40,11 +44,15 @@
           </button>
         </div>
       </div>
-      <label for="codigoSMS" style="margin-top: 2em"><b>Código de Celular *</b></label>
+      <div style="bottom: -5px; text-align: start">
+        <label for="codigoSMS" style="margin-top: 2em"><b>Código de Celular *</b></label>
+      </div>
+
       <div class="input-group mb-10">
         <input
           nid="codigoSMS"
           class="form-control"
+          [ngClass]="claseCodigoSMS"
           name="codigoSMS"
           [type]="codigoSMSVisible ? 'text' : 'password'"
           [(ngModel)]="codigoSMSIngresado"
@@ -57,7 +65,7 @@
       </div>
     </div>
     <div class="md-3" style="margin-top: 20px; text-align: end; width: 100%">
-      <button type="button" class="btn btn-primary" [disabled]="!cedulaBuscadaExiste">Enviar</button>
+      <button type="button" class="btn btn-primary" [disabled]="!cedulaBuscadaExiste" (click)="validarCodigos()">Enviar</button>
     </div>
   </div>
   <div class="col-md-4" style="text-align: center"></div>

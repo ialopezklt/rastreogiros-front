@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 import { faEye, faEyeSlash, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { User } from 'app/entities/user/user.model';
+import { UsuarioRecuperarClave } from 'app/entities/user/usuario-recuperar-clave.model';
 import { UsuarioServiceService } from 'app/shared/usuario-service.service';
 
 @Component({
@@ -26,9 +27,12 @@ export class RecuperarContrasenaComponent implements OnInit {
   codigoSMSIngresado = '';
   codigoEmailIngresado = '';
   usuarioId = '';
-  usuarioConsultado: User;
+  usuarioConsultado: UsuarioRecuperarClave;
   cedulaBuscadaExiste = false;
   busquedaRealizada = false;
+  claseCodigoEmail = 'ng-valid';
+  claseCodigoSMS = 'ng-valid';
+  mostrarModalCambioClave = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -58,8 +62,8 @@ export class RecuperarContrasenaComponent implements OnInit {
 
   // ===========================================================================================
   buscarPorUsername(): void {
-    this.usuarioService.consultarUsuario(this.usuarioId).subscribe(
-      (resp: User) => {
+    this.usuarioService.consultarUsuarioRecuperacionClave(this.usuarioId).subscribe({
+      next: (resp: UsuarioRecuperarClave) => {
         this.usuarioConsultado = resp;
         this.cedulaBuscadaExiste = true;
         this.busquedaRealizada = true;
@@ -68,11 +72,11 @@ export class RecuperarContrasenaComponent implements OnInit {
 
         this.ofuscarUsuarioYCorreo(cor, cel.toString());
       },
-      error => {
+      error: error => {
         this.cedulaBuscadaExiste = false;
         this.busquedaRealizada = true;
-      }
-    );
+      },
+    });
   }
 
   // ===========================================================================================
@@ -87,5 +91,23 @@ export class RecuperarContrasenaComponent implements OnInit {
     this.email_ofuscado = temp1 + temp2 + '@' + temp3;
 
     this.celular_ofuscado = celular.replace(/....../, '******');
+  }
+
+  // ===========================================================================================
+  validarCodigos(): void {
+    if (this.usuarioConsultado.claveSMS === this.codigoSMSIngresado && this.usuarioConsultado.claveEmail === this.codigoEmailIngresado) {
+      this.habilitarCambioClave();
+    } else {
+      this.claseCodigoEmail = this.usuarioConsultado.claveEmail === this.codigoEmailIngresado ? 'ng-valid' : 'ng-invalid';
+      this.claseCodigoSMS = this.usuarioConsultado.claveSMS === this.codigoSMSIngresado ? 'ng-valid' : 'ng-invalid';
+    }
+  }
+  // ===========================================================================================
+  habilitarCambioClave(): void {
+    this.mostrarModalCambioClave = true;
+    const navigationExtras: NavigationExtras = {
+      queryParams: { codigoEmail: this.claseCodigoEmail, codigoSMS: this.claseCodigoSMS, username: this.usuarioConsultado.username },
+    };
+    this.router.navigateByUrl('cambio-contrasena', navigationExtras);
   }
 }

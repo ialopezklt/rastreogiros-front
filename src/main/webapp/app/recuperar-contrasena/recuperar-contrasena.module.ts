@@ -5,14 +5,14 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { RecuperarContrasenaComponent } from './recuperar-contrasena.component';
-import { REGISTRO_ROUTE } from 'app/registro-usuario/registro-usuario.route';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
+import { RECUPERAR_CONTRASENA_ROUTE } from './recuperar-contrasena.route';
 
 @NgModule({
   declarations: [RecuperarContrasenaComponent, CambioContrasenaComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([REGISTRO_ROUTE]),
+    RouterModule.forChild([RECUPERAR_CONTRASENA_ROUTE]),
     FontAwesomeModule,
     NgbModule,
     FormsModule,

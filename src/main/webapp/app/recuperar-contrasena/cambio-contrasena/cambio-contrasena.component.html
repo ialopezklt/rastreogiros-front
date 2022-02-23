@@ -1,10 +1,62 @@
 <div class="row">
   <div class="col-md-4" style="text-align: center"></div>
   <div class="col-md-4" style="text-align: center">
-    <div>
-      <img src="../../content/images/logo-supergiros-400x80.png" />
+    <div style="text-align: center">
+      <img src="../../content/images/logo-supergiros-400x80.png" style="width: 80%" />
     </div>
-    <strong>Recuperaci&oacute;n de contrase&ntilde;a</strong>
+    <form [formGroup]="fgCambioClave" (ngSubmit)="actualizarClave()">
+      <span style="font-weight: 900">Cambiar contrase&ntilde;a</span>
+      <div>Por favor ingrese una nueva contrase&ntilde;a. Recuerde que m&iacute;nimo debe tener 8 caracteres.</div>
+      <!-- ================ Contraseña ============= -->
+      <div class="row" style="padding-top: 1em" style="padding-top: 1em">
+        <div class="col-sm-6 mb-6" style="align-self: flex-end">
+          <strong>Contraseña*</strong><br />
+          <input
+            id="contrasena1"
+            formControlName="contrasena1"
+            pattern="^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;'<>,.?/_]).{8,}$"
+            class="form-control"
+            type="password"
+            style="width: 100%"
+            autocomplete="off"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" (click)="togleCodigoEmail()" type="button">
+              <fa-icon [icon]="iconoMostadoBotonEmail"></fa-icon>
+            </button>
+          </div>
+        </div>
+        <!-- ================ Confirma Contraseña ============= -->
+        <div class="col-sm-6 mb-6" style="align-self: flex-end">
+          <strong>Confirme Contraseña*</strong><br />
+          <input
+            id="contrasena2"
+            formControlName="contrasena2"
+            type="password"
+            style="width: 100%"
+            class="form-control"
+            autocomplete="off"
+            placeholder="Confirmación"
+          />
+        </div>
+      </div>
+      <!-- mensajes -->
+      <div class="row" style="padding-top: 1em" style="padding-top: 1em" *ngIf="contrasena1?.invalid || contrasena2?.invalid">
+        <div *ngIf="contrasena1?.invalid && (contrasena1?.dirty || contrasena1?.touched)" class="bg-warning">
+          LA contraseña debe tener almenos una letra minúscula, una(1) letra MAYÚSCULA, un(1) número y un(1) caracter especial.
+        </div>
+        <div *ngIf="contrasena2?.invalid && (contrasena2?.dirty || contrasena2?.touched)" class="bg-warning">
+          las contraseñas deben ser iguales
+        </div>
+      </div>
+      <!-- ================ BTN Enviar ============= -->
+      <div class="row" style="padding-top: 1em">
+        <div class="col-sm-12 mb-2">
+          <button type="submit" class="btn btn-primary" [disabled]="!fgCambioClave.valid" style="width: 100%">Siguiente</button>
+        </div>
+      </div>
+    </form>
   </div>
+  <!-- FIN DIV Central -->
   <div class="col-md-4" style="text-align: center"></div>
 </div>

@@ -1,4 +1,4 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import locale from '@angular/common/locales/es';
@@ -26,6 +26,8 @@ import { ErrorComponent } from './layouts/error/error.component';
 import { RegistroUsuarioModule } from './registro-usuario/registro-usuario.module';
 import { RecuperarContrasenaModule } from './recuperar-contrasena/recuperar-contrasena.module';
 import { AllowNumberDirective } from './directives/number-only/number-only.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   imports: [
@@ -40,6 +42,8 @@ import { AllowNumberDirective } from './directives/number-only/number-only.direc
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
     RegistroUsuarioModule,
     RecuperarContrasenaModule,
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
   ],
   providers: [
     Title,
@@ -49,6 +53,7 @@ import { AllowNumberDirective } from './directives/number-only/number-only.direc
   ],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, AllowNumberDirective],
   bootstrap: [MainComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {
   constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { IUser, User } from 'app/entities/user/user.model';
@@ -8,6 +8,9 @@ import { ModalDismissReasons, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-boo
 import { Router } from '@angular/router';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { CodigosMensaje } from 'app/entities/Interfaces/codigos-mensaje.model';
+import { GlobalConstants } from 'app/home/globales';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { AlertService } from 'app/core/util/alert.service';
 
 // Validator para comparar si las claves ingresadas son iguales
 export const compararClavesValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -28,7 +31,7 @@ export const compararClavesValidator: ValidatorFn = (control: AbstractControl): 
   templateUrl: './registro-usuario.component.html',
   styleUrls: ['./registro-usuario.component.scss'],
 })
-export class RegistroUsuarioComponent implements OnInit {
+export class RegistroUsuarioComponent implements OnInit, AfterViewInit {
   title = 'Supergiros - Rastreo de Giro';
   token: string | undefined;
   datosUsuario!: IUser;
@@ -59,13 +62,18 @@ export class RegistroUsuarioComponent implements OnInit {
   mostarAlertaIntentosExcedidos = false;
   mostrarAlertaCodigosErrados = false;
   inputCelular = '3';
+  URL_TyC = GlobalConstants.URL_TyC;
+  claseCSScodigoSMS = 'ng-valid';
+  claseCSScodigoEmail = 'ng-valid';
 
   constructor(
     private formBuilder: FormBuilder,
     private registroService: RegistroUsuarioService,
     private applicationConfigService: ApplicationConfigService,
     private modalService: NgbModal,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private alerta: AlertService
   ) {
     this.token = undefined;
 
@@ -89,6 +97,11 @@ export class RegistroUsuarioComponent implements OnInit {
       },
       { validators: compararClavesValidator }
     );
+  }
+  ngAfterViewInit(): void {
+    if (this.timerEnvioMensajes !== undefined) {
+      clearTimeout(this.timerEnvioMensajes);
+    }
   }
 
   get tipoIdentificacion(): any {
@@ -169,7 +182,7 @@ export class RegistroUsuarioComponent implements OnInit {
   // ===========================================================================================
   public enviarDatosFormulario(): void {
     this.errorEnRegistro = false;
-
+    this.spinner.show();
     this.datosUsuario.celular = this.celular?.value;
     this.datosUsuario.clave = this.contrasena1?.value;
     this.datosUsuario.correo = this.correoElectronico?.value;
@@ -180,45 +193,55 @@ export class RegistroUsuarioComponent implements OnInit {
     this.datosUsuario.segundoNombre = this.segundoNombre?.value;
     this.datosUsuario.tipoDocumento = this.tipoIdentificacion?.value;
 
-    this.registroService.registrar(this.datosUsuario).subscribe(
-      (resp: IUser) => {
+    this.registroService.registrar(this.datosUsuario).subscribe({
+      next: (resp: IUser) => {
+        this.spinner.hide();
         this.datosUsuario = resp;
         if (this.timerEnvioMensajes !== undefined) {
           clearTimeout(this.timerEnvioMensajes);
         }
         this.modal?.close();
         console.log(resp);
-        alert('Bienvenido');
+
+        this.alerta.addAlert({ type: 'success', message: 'Registo exitoso' });
         this.router.navigateByUrl('/');
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
+        this.spinner.hide();
         console.log(err);
         this.errorEnRegistro = true;
         this.clickEnviar = false;
-      }
-    );
+      },
+    });
   }
 
   // ===========================================================================================
   public validarCodigoIngresados(): void {
-    this.intentosRestantes -= 1;
-
-    if (this.intentosRestantes <= 0) {
-      this.mostarAlertaIntentosExcedidos = true;
-      if (this.timerEnvioMensajes !== undefined) {
-        clearTimeout(this.timerEnvioMensajes);
-      }
-
-      setTimeout(() => {
-        this.modal?.close();
-        this.router.navigateByUrl('/');
-      }, 500);
+    // Valida codigos
+    if (this.codigoEmailIngresado === this.codigosEnviados?.codigoEmail && this.codigoSMSIngresado === this.codigosEnviados?.codigoSMS) {
+      this.clickEnviar = true;
+      this.enviarDatosFormulario();
     } else {
-      if (this.codigoEmailIngresado === this.codigosEnviados?.codigoEmail && this.codigoSMSIngresado === this.codigosEnviados?.codigoSMS) {
-        this.clickEnviar = true;
-        this.enviarDatosFormulario();
-      } else {
-        this.mostrarAlertaCodigosErrados = true;
+      this.claseCSScodigoEmail = this.codigoEmailIngresado === this.codigosEnviados?.codigoEmail ? 'ng-valid' : 'ng-invalid';
+      this.claseCSScodigoSMS = this.codigoSMSIngresado === this.codigosEnviados?.codigoSMS ? 'ng-valid' : 'ng-invalid';
+      this.mostrarAlertaCodigosErrados = true;
+      // comprobar numero de intentos fallidos
+      this.intentosRestantes -= 1;
+      if (this.intentosRestantes <= 0) {
+        this.mostarAlertaIntentosExcedidos = true;
+        if (this.intentosRestantes <= 0) {
+          // debe sacar al usuario de esta pantalla, para lo cual
+          // Elimina el timeout que se inicio con el envío del SMS
+          if (this.timerEnvioMensajes !== undefined) {
+            clearTimeout(this.timerEnvioMensajes);
+          }
+          // lo deja en la pantalla 500 milisegindos para que pueda ver el mensaje
+          // y luego lo redirecciona al home
+          setTimeout(() => {
+            this.modal?.close();
+            this.router.navigateByUrl('/');
+          }, 1000);
+        }
       }
     }
   }
@@ -274,6 +297,7 @@ export class RegistroUsuarioComponent implements OnInit {
 
   // ===========================================================================================
   abrirModal(content: any): void {
+    this.recaptcha.reset();
     this.numeroIntentosRegistro += 1;
     if (this.numeroIntentosRegistro >= 2) {
       this.mostrarAlertaSalir = true;

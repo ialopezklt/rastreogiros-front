@@ -19,7 +19,7 @@
               name="tipo_id"
               formControlName="tipoIdentificacion"
               style="width: 100%"
-              class="form-select form-control"
+              class="form-control"
               required
             >
               <option value="CC">Cédula de ciudadanía(CC)</option>
@@ -203,9 +203,7 @@
           <div class="col-10 col-sm-10">
             <span style="hyphens: auto">
               Acepto las condiciones establecidas en la
-              <a href="https://www.supergiros.com.co/publicaciones/129465/politica-tratamientode-datos/" target="_blank">
-                política de tratamiento de datos personales</a
-              >
+              <a [href]="URL_TyC" target="_blank"> política de tratamiento de datos personales</a>
               Red Empresarial de Servicios S.A.(*)</span
             >
           </div>
@@ -254,23 +252,26 @@
   <ngb-alert [dismissible]="false" *ngIf="mostrarAlertaSalir">
     <strong>Warning!</strong> Better check yourself, you're not looking too good.
   </ngb-alert>
+  <ngx-spinner type="ball-scale-multiple"><p style="color: white">Verificando...</p></ngx-spinner>
 </div>
 <!-- ================ MODAL PIDE CODIGOS ENVIADOS ============= -->
 <ng-template #content let-modal>
   <div class="modal-header-nousada" style="text-align: center; margin: 15px">
+    <jhi-alert></jhi-alert>
     <img src="../../content/images/logo-supergiros-400x80.png" width="80%" />
     <!-- button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button -->
   </div>
   <div class="modal-body">
     Para finalizar su registro por favor ingrese el codigo que se le envió al Email {{ email_ofuscado }} y el código enviado al número de
     celular {{ celular_ofuscado }}
-    <form class="needs-validation" novalidate>
+    <form>
       <div class="mb-3" style="margin-top: 20px">
         <label for="codigoEmail"><b>Código de Email *</b></label>
         <div class="input-group mb-10">
           <input
             id="codigoEmail"
             class="form-control"
+            [ngClass]="claseCSScodigoEmail"
             name="codigoEmail"
             [(ngModel)]="codigoEmailIngresado"
             [type]="codigoEmailVisible ? 'text' : 'password'"
@@ -286,6 +287,7 @@
           <input
             nid="codigoSMS"
             class="form-control"
+            [ngClass]="claseCSScodigoSMS"
             name="codigoSMS"
             [type]="codigoSMSVisible ? 'text' : 'password'"
             [(ngModel)]="codigoSMSIngresado"
