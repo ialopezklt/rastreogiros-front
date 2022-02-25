@@ -8,44 +8,52 @@
       <span style="font-weight: 900">Cambiar contrase&ntilde;a</span>
       <div>Por favor ingrese una nueva contrase&ntilde;a. Recuerde que m&iacute;nimo debe tener 8 caracteres.</div>
       <!-- ================ Contraseña ============= -->
+
       <div class="row" style="padding-top: 1em" style="padding-top: 1em">
-        <div class="col-sm-6 mb-6" style="align-self: flex-end">
-          <strong>Contraseña*</strong><br />
+        <div class="row"><strong>Nueva Contraseña*</strong></div>
+        <div class="col-12 input-group">
           <input
             id="contrasena1"
             formControlName="contrasena1"
             pattern="^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;'<>,.?/_]).{8,}$"
             class="form-control"
-            type="password"
-            style="width: 100%"
             autocomplete="off"
+            [ngClass]="claseCSSclave1"
+            name="contrasena1"
+            [type]="codigoClave1Visible ? 'text' : 'password'"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" (click)="togleCodigoEmail()" type="button">
-              <fa-icon [icon]="iconoMostadoBotonEmail"></fa-icon>
+            <button class="btn btn-outline-secondary" (click)="togleClave1()" type="button">
+              <fa-icon [icon]="iconoMostadoClave1"></fa-icon>
             </button>
           </div>
         </div>
         <!-- ================ Confirma Contraseña ============= -->
-        <div class="col-sm-6 mb-6" style="align-self: flex-end">
-          <strong>Confirme Contraseña*</strong><br />
+        <div class="row" style="padding-top: 1em"><strong>Confirme Contraseña*</strong></div>
+        <div class="col-12 input-group">
           <input
             id="contrasena2"
             formControlName="contrasena2"
-            type="password"
-            style="width: 100%"
             class="form-control"
             autocomplete="off"
             placeholder="Confirmación"
+            [ngClass]="claseCSSclave2"
+            name="contrasena2"
+            [type]="codigoClave2Visible ? 'text' : 'password'"
           />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" (click)="togleClave2()" type="button">
+              <fa-icon [icon]="iconoMostadoClave2"></fa-icon>
+            </button>
+          </div>
         </div>
       </div>
       <!-- mensajes -->
       <div class="row" style="padding-top: 1em" style="padding-top: 1em" *ngIf="contrasena1?.invalid || contrasena2?.invalid">
-        <div *ngIf="contrasena1?.invalid && (contrasena1?.dirty || contrasena1?.touched)" class="bg-warning">
+        <div *ngIf="contrasena1?.invalid && (contrasena1?.dirty || contrasena1?.touched)" class="bg-warning" style="text-align: left">
           LA contraseña debe tener almenos una letra minúscula, una(1) letra MAYÚSCULA, un(1) número y un(1) caracter especial.
         </div>
-        <div *ngIf="contrasena2?.invalid && (contrasena2?.dirty || contrasena2?.touched)" class="bg-warning">
+        <div *ngIf="contrasena2?.invalid && (contrasena2?.dirty || contrasena2?.touched)" class="bg-warning" style="text-align: left">
           las contraseñas deben ser iguales
         </div>
       </div>

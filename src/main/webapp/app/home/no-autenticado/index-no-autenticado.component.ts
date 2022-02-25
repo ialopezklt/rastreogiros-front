@@ -1,16 +1,16 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { AccountService } from 'app/core/auth/account.service';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { User } from 'app/entities/user/user.model';
-import { AutenticarService } from './autenticar.service';
 import { FormAutenticacion } from './form-login-model';
 import { GlobalConstants } from 'app/home/globales';
 import { Router } from '@angular/router';
 import { ParametroService } from 'app/entities/parametro/parametro.service';
 import { IParametro } from 'app/entities/parametro/parametro.model';
 import { AlertService } from 'app/core/util/alert.service';
+import { SessionStorageService } from 'ngx-webstorage';
+import { AuthServerProvider } from 'app/core/auth/auth-jwt.service';
+import { Login } from 'app/login/login.model';
+import { UserService } from 'app/entities/user/user.service';
 
 @Component({
   selector: 'jhi-index-no-autenticado',
@@ -37,13 +37,13 @@ export class IndexNoAutenticadoComponent implements OnInit, AfterViewInit {
   private listaParametros: IParametro[] | undefined;
 
   constructor(
-    private http: HttpClient,
     private accountService: AccountService,
-    private applicationConfigService: ApplicationConfigService,
-    private autenticarService: AutenticarService,
     private router: Router,
     private parametroService: ParametroService,
-    private service: AlertService
+    private service: AlertService,
+    private sessionStorageService: SessionStorageService,
+    private authServerProvider: AuthServerProvider,
+    private userService: UserService
   ) {
     this.token = undefined;
   }
@@ -56,13 +56,15 @@ export class IndexNoAutenticadoComponent implements OnInit, AfterViewInit {
       }
     });
     // Trae los parametros generales
-    this.parametroService.traeParametro().subscribe({
+    this.parametroService.traeParametrosPublicos().subscribe({
       next: (resp: IParametro[]) => {
         console.log(resp);
         this.listaParametros = resp;
         GlobalConstants.URL_TyC = this.listaParametros.find(elem => elem.parametroId === 35)!.valor!;
         GlobalConstants.mensajeErrorClaveIngreso = this.listaParametros.find(elem => elem.parametroId === 37)!.valor!;
         GlobalConstants.tooltipCampoUsername = this.listaParametros.find(elem => elem.parametroId === 38)!.valor!;
+        GlobalConstants.mensajeGiroDisponible = this.listaParametros.find(elem => elem.parametroId === 40)!.valor!;
+        GlobalConstants.mensajeGiroNODisponible = this.listaParametros.find(elem => elem.parametroId === 41)!.valor!;
         this.URL_TyC = GlobalConstants.URL_TyC;
         this.tooltipCampoUsername = GlobalConstants.tooltipCampoUsername;
       },
@@ -77,34 +79,19 @@ export class IndexNoAutenticadoComponent implements OnInit, AfterViewInit {
     /* this.username.nativeElement.focus(); */
   }
 
-  public send(form: NgForm): void {
-    this.submitted = true;
-
-    /*
-    if (form.invalid) {
-      for (const control of Object.keys(form.controls)) {
-        form.controls[control].markAsTouched();
-      }
-      return;
-    } */
-
-    this.login();
-
-    // relizar login
-    // this.login(form.controls["numero_id"]);
-
-    console.debug(`Token [${this.token}] generated`);
-  }
-
   public login(): void {
-    this.autenticarService.login(this.datosLogin.username, this.datosLogin.password).subscribe({
-      next: (usuario: User) => {
+    this.submitted = true;
+    const loginStruct: Login = new Login(this.datosLogin.username, this.datosLogin.password, false);
+
+    this.authServerProvider.login(loginStruct).subscribe({
+      next: () => {
+        this.consultarDatosUsuario();
         this.service.addAlert({ type: 'success', toast: true, message: 'bienvenido' });
         this.autenticado.emit(true);
         GlobalConstants.autenticado = true;
         this.authenticationError = false;
       },
-      error: error => {
+      error: () => {
         this.intentosDisponiblesDeLogin -= 1;
         if (this.intentosDisponiblesDeLogin === 0) {
           window.location.href = 'http://www.supergiros.com.co';
@@ -118,6 +105,15 @@ export class IndexNoAutenticadoComponent implements OnInit, AfterViewInit {
         }
         this.errorLogin = true;
         this.authenticationError = true;
+      },
+    });
+  }
+
+  public consultarDatosUsuario(): void {
+    this.userService.consultar().subscribe({
+      next: (usuario: User) => {
+        this.sessionStorageService.store('username', usuario.numeroDocumento);
+        this.sessionStorageService.store('usuario', JSON.stringify(usuario));
       },
     });
   }

@@ -9,10 +9,19 @@ import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSet
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ActualizarDatosComponent } from 'app/actualizar-datos/actualizar-datos.component';
+import { ActualizarDatosRoute } from 'app/actualizar-datos/actualizar-datos.route';
 
 @NgModule({
-  imports: [SharedModule, RouterModule.forChild([HOME_ROUTE]), NgbModule, RecaptchaModule, FormsModule, RecaptchaFormsModule],
-  declarations: [HomeComponent, IndexAutenticadoComponent, IndexNoAutenticadoComponent],
+  imports: [
+    SharedModule,
+    RouterModule.forChild([HOME_ROUTE, ActualizarDatosRoute]),
+    NgbModule,
+    RecaptchaModule,
+    FormsModule,
+    RecaptchaFormsModule,
+  ],
+  declarations: [HomeComponent, IndexAutenticadoComponent, IndexNoAutenticadoComponent, ActualizarDatosComponent],
   providers: [
     {
       provide: RECAPTCHA_SETTINGS,

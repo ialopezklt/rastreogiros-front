@@ -171,7 +171,7 @@ export class RegistroUsuarioComponent implements OnInit, AfterViewInit {
     this.datosUsuario.celular = 0;
     this.datosUsuario.clave = '';
     this.datosUsuario.correo = '';
-    this.datosUsuario.numeroDocumento = 0;
+    this.datosUsuario.numeroDocumento = '';
     this.datosUsuario.primerApellido = '';
     this.datosUsuario.primerNombre = '';
     this.datosUsuario.segundoApellido = '';
@@ -287,12 +287,12 @@ export class RegistroUsuarioComponent implements OnInit, AfterViewInit {
     }, 300000);
     const numcel = this.celular.value;
     const dircorreo = this.correoElectronico.value;
-    this.registroService.enviarMensajesRegistro(numcel, dircorreo).subscribe(
-      (resp: CodigosMensaje) => {
+    this.registroService.enviarMensajesRegistro(numcel, dircorreo).subscribe({
+      next: (resp: CodigosMensaje) => {
         this.codigosEnviados = resp;
       },
-      (err: any) => console.log(err)
-    );
+      error: (err: any) => console.log(err),
+    });
   }
 
   // ===========================================================================================

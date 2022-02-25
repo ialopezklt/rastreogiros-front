@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { AlertService } from 'app/core/util/alert.service';
 import { UsuarioRecuperarClave } from 'app/entities/user/usuario-recuperar-clave.model';
 import { UsuarioServiceService } from 'app/shared/usuario-service.service';
@@ -33,18 +32,22 @@ export class CambioContrasenaComponent implements OnInit {
   fgCambioClave!: FormGroup;
   iconFaeye = faEye;
   iconFaeyeSlash = faEyeSlash;
-  iconoMostadoBotonEmail = this.iconFaeye;
-  iconoMostadoBotonSMS = this.iconFaeye;
-  codigoEmailVisible = false;
-  codigoSMSVisible = false;
+  iconoMostadoClave1 = this.iconFaeye;
+  iconoMostadoClave2 = this.iconFaeye;
+  codigoClave1Visible = false;
+  codigoClave2Visible = false;
+  claseCSSclave1 = 'ng-valid';
+  claseCSSclave2 = 'ng-valid';
+  parametrosRecibidos: any | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
-    private applicationConfigService: ApplicationConfigService,
     private router: Router,
     private usuarioService: UsuarioServiceService,
     private alertService: AlertService
-  ) {}
+  ) {
+    this.parametrosRecibidos = router.getCurrentNavigation()?.extras.state;
+  }
 
   ngOnInit(): void {
     this.nuevaContrasena1 = '';
@@ -65,19 +68,22 @@ export class CambioContrasenaComponent implements OnInit {
     return this.fgCambioClave.get('contrasena2');
   }
   // ===========================================================================================
-  togleCodigoEmail(): void {
-    this.codigoEmailVisible = !this.codigoEmailVisible;
-    this.iconoMostadoBotonEmail = this.iconoMostadoBotonEmail === this.iconFaeye ? this.iconFaeyeSlash : this.iconFaeye;
+  togleClave1(): void {
+    this.codigoClave1Visible = !this.codigoClave1Visible;
+    this.iconoMostadoClave1 = this.iconoMostadoClave1 === this.iconFaeye ? this.iconFaeyeSlash : this.iconFaeye;
   }
 
   // ===========================================================================================
-  togleCodigoSMS(): void {
-    this.codigoSMSVisible = !this.codigoSMSVisible;
-    this.iconoMostadoBotonSMS = this.iconoMostadoBotonSMS === this.iconFaeye ? this.iconFaeyeSlash : this.iconFaeye;
+  togleClave2(): void {
+    this.codigoClave2Visible = !this.codigoClave2Visible;
+    this.iconoMostadoClave2 = this.iconoMostadoClave2 === this.iconFaeye ? this.iconFaeyeSlash : this.iconFaeye;
   }
   // ===========================================================================================
   actualizarClave(): void {
+    this.cambioClavePayload = new UsuarioRecuperarClave();
     this.cambioClavePayload.nuevaClave = this.contrasena1;
+    this.cambioClavePayload.claveEmail = this.parametrosRecibidos.codigosEnviados.codigoEmail;
+    this.cambioClavePayload.claveSMS = this.parametrosRecibidos.codigosEnviados.codigoSMS;
 
     this.usuarioService.actualizarContrasena(this.cambioClavePayload).subscribe({
       next: () => {

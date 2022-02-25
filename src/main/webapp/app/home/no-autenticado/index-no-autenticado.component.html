@@ -42,7 +42,8 @@
               (focus)="focusId = true; validarIngresoDatos()"
               (blur)="focusId = false; validarIngresoDatos()"
               (keypress)="restrictInputNumeroId($event)"
-              pattern="[0-9\-a-zA-Z]{5,}"
+              oninput="this.value = this.value.toUpperCase()"
+              pattern="[0-9\-a-zA-Z]{2,}"
               style="width: 100%"
               class="form-control"
               [ngbTooltip]="tooltipCampoUsername"
@@ -123,13 +124,7 @@
         <!-- ================ BTN Enviar ============= -->
         <div class="row" style="padding-top: 1em">
           <div class="col-sm-12 mb-2">
-            <button
-              type="button"
-              class="btn btn-primary"
-              [disabled]="!formularioLogin.valid"
-              (click)="send(formularioLogin)"
-              style="width: 100%"
-            >
+            <button type="button" class="btn btn-primary" [disabled]="!formularioLogin.valid" (click)="login()" style="width: 100%">
               Enviar
             </button>
           </div>

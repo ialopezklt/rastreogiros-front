@@ -1,6 +1,6 @@
 export interface IUser {
   tipoDocumento?: string;
-  numeroDocumento?: number;
+  numeroDocumento?: string;
   primerNombre?: string;
   segundoNombre?: string;
   primerApellido?: string;
@@ -13,7 +13,7 @@ export interface IUser {
 export class User implements IUser {
   constructor(
     public tipoDocumento?: string,
-    public numeroDocumento?: number,
+    public numeroDocumento?: string,
     public primerNombre?: string,
     public segundoNombre?: string,
     public primerApellido?: string,

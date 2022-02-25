@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { RespuestaSims } from 'app/entities/respuesta-sims/respuesta-sims.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +10,12 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 export class ConsultaEstadoGiroService {
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
-  public consultarSIMS(pin: string): void {
-    // Obtener la URL del servicio
-    let url = 'http://10.18.1.201:9957?pin=' + pin;
+  consumirServicio(pin: string, tipoDocumentoCliente: string, numeroDocumentoCliente: string): Observable<RespuestaSims> {
+    let parametros: HttpParams = new HttpParams();
+    parametros = parametros.set('tipoDocumentoCliente', tipoDocumentoCliente);
+    parametros = parametros.set('numeroDocumentoCliente', numeroDocumentoCliente);
+    parametros = parametros.set('pin', pin);
+
+    return this.http.get<RespuestaSims>(this.applicationConfigService.getEndpointFor('/api/consultagiro'), { params: parametros });
   }
 }

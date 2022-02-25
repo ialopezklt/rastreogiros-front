@@ -1,29 +1,76 @@
+<div class="row" style="text-align: center">
+  <div style="width: 50%; text-align: center; font-size: 24px; font-weight: 900; padding: 30px; margin: auto">
+    Ingresa los datos en el formulario para conocer el estado de tu giro
+  </div>
+</div>
 <div class="row">
-  <div class="col-xs-0 col-sm-1 col-md-3"></div>
-  <div class="col-xs-12 col-sm-10 col-md-6">
-    <div style="text-align: center; width: 80%">
-      <img src="../../../content/images/logo-supergiros.png" />
+  <div class="col-xs-0 col-1"></div>
+  <div class="col-xs-12 col-4" style="text-align: center">
+    <div style="text-align: center">
+      <img src="../../../content/images/icon-rastrear.png" />
       <br />
       <h6>Rastrea tu Giro</h6>
     </div>
-    <div style="padding-top: 2em; text-align: center">
-      <p>Por favor Digitar el número de tu PIN</p>
-    </div>
+    <div style="padding-top: 2em; text-align: center; width: 100%">Por favor Digitar el número de tu PIN</div>
     <div>
       <form [formGroup]="fg_consultar_giro" class="" (ngSubmit)="consultarEnvio()">
-        <div>
+        <div style="width: 70%; margin: auto; text-align: start">
           <label>PIN</label>
           <input id="txt_pin" style="width: 100%" formControlName="txt_pin" class="form-control" type="text" placeholder="Ingrese el PIN" />
         </div>
         <div style="padding-top: 2em">
-          <strong>Nota:</strong>Recuerde que solo podrá consultar los pines de los giros asociados a su número de documento y consultar las
+          <strong>Nota:</strong> Recuerde que solo podrá consultar los pines de los giros asociados a su número de documento y consultar las
           transacciones realizadas en los ultimos tres meses.
         </div>
-        <div style="padding-top: 2em; text-align: center">
-          <button class="btn btn-primary">Consultar</button>
+        <div style="padding-top: 1em; text-align: center">
+          <button class="btn btn-primary rounded-pill" [disabled]="txt_pin === null || txt_pin === '' || !txt_pin.valid" type="submit">
+            Consultar
+          </button>
         </div>
       </form>
     </div>
+    <div style="padding-top: 1em">
+      <button class="btn btn-primary" (click)="actualizarDatos()">Actualizar Datos</button>
+    </div>
   </div>
-  <div class="col-xs-0 col-sm-1 col-md-3"></div>
+  <div class="col-xs-0 col-1">
+    <!-- ESPACIO EN BLANCO-->
+  </div>
+  <div class="col-xs-0 col-5">
+    <!-- SEccion Derecha de pagina-->
+    <div class="row" style="background-color: #f6f6f7">
+      <div class="" style="text-align: center; font-size: 20px; font-weight: 600; width: 100%">Resultado de la b&uacute;squeda</div>
+      <div class="" style="margin: auto">
+        <div style="width: 30px; border-bottom: 3px solid blue; height: 2px">&nbsp;</div>
+      </div>
+      <div class="row" style="text-align: center; padding: 2em 0 2em 0; width: 100%; margin: auto">
+        <div class="col">
+          <img src="../../../content/images/icon-resultado-user.png" style="width: 40%" /><br />
+          <b>¿Qui&eacute;n env&iacute;a?</b>
+        </div>
+        <div class="col">
+          <img src="../../../content/images/icon-resultado-user.png" style="width: 40%" /><br />
+          <b>¿Qui&eacute;n Recibe?</b>
+        </div>
+        <div class="col">
+          <img src="../../../content/images/icon-dinero.png" style="width: 40%" /><br />
+          <b>Estado</b>
+          <span *ngIf="mostrarEstado" style="color: red; font-weight: 600">{{ estadoGiro }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <img src="../../../content/images/banner-sgm.png" style="width: 100%" />
+    </div>
+    <div *ngIf="mensajeAlerta !== ''" class="row" [outerHTML]="mensajeAlerta">
+      <button class="btn btn-primary" (click)="nuevaConsulta()">Nueva Consulta</button>
+    </div>
+    <button class="btn btn-secondary" (click)="salir()">Salir</button>
+  </div>
+  <div class="col-xs-0 col-1"></div>
+</div>
+<div *ngIf="mensajeAlerta !== ''" style="width: 80%; margin: auto; text-align: center; position: fixed; top: 50%; height: 5em">
+  <ngb-alert *ngIf="mensajeAlerta !== ''" (closed)="mensajeAlerta = ''">
+    {{ mensajeAlerta }}
+  </ngb-alert>
 </div>

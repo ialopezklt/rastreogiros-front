@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class ParametroService {
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
-  public traeParametro(): Observable<Parametro[]> {
+  public traeParametrosPublicos(): Observable<Parametro[]> {
     return this.http.get<Parametro[]>(this.applicationConfigService.getEndpointFor('/api/publico/parametros'));
   }
 }

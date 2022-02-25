@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { faEye, faEyeSlash, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { User } from 'app/entities/user/user.model';
 import { UsuarioRecuperarClave } from 'app/entities/user/usuario-recuperar-clave.model';
 import { UsuarioServiceService } from 'app/shared/usuario-service.service';
@@ -34,13 +31,7 @@ export class RecuperarContrasenaComponent implements OnInit {
   claseCodigoSMS = 'ng-valid';
   mostrarModalCambioClave = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private applicationConfigService: ApplicationConfigService,
-    private modalService: NgbModal,
-    private router: Router,
-    private usuarioService: UsuarioServiceService
-  ) {
+  constructor(private router: Router, private usuarioService: UsuarioServiceService) {
     this.usuarioConsultado = new User();
   }
 
@@ -106,8 +97,12 @@ export class RecuperarContrasenaComponent implements OnInit {
   habilitarCambioClave(): void {
     this.mostrarModalCambioClave = true;
     const navigationExtras: NavigationExtras = {
-      queryParams: { codigoEmail: this.claseCodigoEmail, codigoSMS: this.claseCodigoSMS, username: this.usuarioConsultado.username },
+      queryParams: {
+        codigoEmail: this.usuarioConsultado.claveEmail,
+        codigoSMS: this.usuarioConsultado.claveSMS,
+        username: this.usuarioConsultado.username,
+      },
     };
-    this.router.navigateByUrl('cambio-contrasena', navigationExtras);
+    this.router.navigate(['/cambio-contrasena'], { state: { codigosEnviados: navigationExtras } });
   }
 }
